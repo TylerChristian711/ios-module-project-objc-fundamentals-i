@@ -21,7 +21,7 @@ int main(int argc, const char * argv[]) {
         LSIAgent *eugene = [[LSIAgent alloc] initWithCoverName:@"Eugene Kittridge" realName:@"Henry Czerny" accessLevel:(int)10 compromised:(BOOL)YES];
         
         LSIAgent *franz = [[LSIAgent alloc] initWithCoverName:@"Franz Kriper" realName:@"Jean Reno" accessLevel:(int) 4
-            compromised:(BOOL) NO];
+                                                  compromised:(BOOL) NO];
         
         LSIAgent *luther = [[LSIAgent alloc] initWithCoverName:@"Luther Stickell" realName:@"Ving Rhames" accessLevel:(int) 4 compromised:(BOOL)NO];
         
@@ -46,6 +46,42 @@ int main(int argc, const char * argv[]) {
             }
         }
         NSLog(@"Number of agents compromised: %d", compAgents);
+        
+        
+        for (LSIAgent *agent in agents) {
+            if ([[agent accessLevel] isGreaterThanOrEqualTo: [NSNumber numberWithInt:8]]) {
+                if ([agent compromised] == [NSNumber numberWithInt:1]) {
+                    NSLog(@"%@, level: %@ **Warning** **COMPROMISED**", [agent realName], [agent accessLevel]);
+                } else {
+                    NSLog(@"%@, level: %@", [agent realName], [agent accessLevel]);
+                }
+            }
+        }
+        int lowLevelAgents = 0;
+        int midLevelAgents = 0;
+        int highLevelAgents = 0;
+        
+        
+        for (LSIAgent *agent in agents) {
+            if ([[agent accessLevel] isGreaterThanOrEqualTo: [NSNumber numberWithInt:8]]) {
+                highLevelAgents++;
+            } else if ([[agent accessLevel] isGreaterThanOrEqualTo:[NSNumber numberWithInt:5]] && [[agent accessLevel] isLessThanOrEqualTo: [NSNumber numberWithInt:7]]) {
+                midLevelAgents++;
+            } else {
+                lowLevelAgents++;
+            }
+        }
+        NSLog(@"%d low level agents, %d mid level agents, %d high level agents", lowLevelAgents, midLevelAgents, highLevelAgents);
+        
+        
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"accessLevel" ascending:YES];
+        NSArray *sortedAgents = [agents sortedArrayUsingDescriptors:@[sortDescriptor]];
+        
+        for (LSIAgent *agent in sortedAgents) {
+            NSLog(@"%@, level: %@", [agent coverName], [agent accessLevel]);
+        }
     }
     return 0;
+    
+
 }
